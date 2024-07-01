@@ -1,9 +1,28 @@
 open Core
 
-(* You need to change the implementation of this function so that it does something
-   to the image instead of just leaving it untouched. *)
+(* You need to change the implementation of this function so that it does
+   something to the image instead of just leaving it untouched. *)
 let transform image =
-  image
+  Image.map image ~f:(fun pix ->
+    let av = (Pixel.red pix + Pixel.blue pix + Pixel.green pix) / 3 in
+    Pixel.of_int av)
+;;
+
+let%expect_test "Grayscale image" =
+  let transformed =
+    transform
+      (Image.load_ppm
+         ~filename:"/home/ubuntu/raster/images/beach_portrait.ppm")
+  in
+  print_s
+    [%sexp
+      (Image.equal
+         transformed
+         (Image.load_ppm
+            ~filename:
+              "/home/ubuntu/raster/images/reference-beach_portrait_gray.ppm")
+       : bool)];
+  [%expect "true"]
 ;;
 
 let command =
@@ -20,5 +39,6 @@ let command =
         let image = Image.load_ppm ~filename |> transform in
         Image.save_ppm
           image
-          ~filename:(String.chop_suffix_exn filename ~suffix:".ppm" ^ "_gray.ppm")]
+          ~filename:
+            (String.chop_suffix_exn filename ~suffix:".ppm" ^ "_gray.ppm")]
 ;;

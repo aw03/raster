@@ -1,22 +1,20 @@
 open! Core
 
-(**
-   The [Image] module provides functions to manipulate 2D images in the Portable Pixmap
-   (PPM) format. Each pixel in the image is represented using the [Pixel.t] type. The main
-   type provided by this module is [t], which represents the images. The pixel at position
-   0,0 is the top left corner of the image.
+(** The [Image] module provides functions to manipulate 2D images in the Portable Pixmap
+    (PPM) format. Each pixel in the image is represented using the [Pixel.t] type. The main
+    type provided by this module is [t], which represents the images. The pixel at position
+    0,0 is the top left corner of the image.
 
-   Here's an outline of the functionalities provided by this module:
+    Here's an outline of the functionalities provided by this module:
 
-   - Loading and saving PPM images
-   - Querying image properties (width, height, max value)
-   - Getting and setting individual pixels
-   - Mapping, folding and iterating over pixels in an image
-   - Copying and slicing images
-   - Generating images with a constant pixel color
-*)
+    - Loading and saving PPM images
+    - Querying image properties (width, height, max value)
+    - Getting and setting individual pixels
+    - Mapping, folding and iterating over pixels in an image
+    - Copying and slicing images
+    - Generating images with a constant pixel color *)
 
-type t
+type t [@@deriving equal]
 
 (** [load_ppm ~filename] reads a PPM image from the given [filename] and returns an image
     of type [t]. Raises [Sys_error] if the file cannot be read, and an exception if the
@@ -61,7 +59,11 @@ val fold : t -> init:'acc -> f:('acc -> Pixel.t -> 'acc) -> 'acc
 (** [foldi image ~init ~f] folds the given function [f] with positions (in [x] and [y])
     over all the pixels of the [image], accumulating the result in a value of type
     ['acc]. *)
-val foldi : t -> init:'acc -> f:(x:int -> y:int -> 'acc -> Pixel.t -> 'acc) -> 'acc
+val foldi
+  :  t
+  -> init:'acc
+  -> f:(x:int -> y:int -> 'acc -> Pixel.t -> 'acc)
+  -> 'acc
 
 (** [save_ppm image ~filename] writes the given [image] to the given [filename] in PPM
     format. Raises [Sys_error] if the file cannot be written. *)

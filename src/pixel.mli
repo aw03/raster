@@ -4,8 +4,7 @@ open! Core
 
     The [Pixel] module provides a representation and utility functions for working with
     RGB-color pixels. Each pixel is represented as a tuple of three integer values, one
-    each for the red, green, and blue (RGB) channels.
-*)
+    each for the red, green, and blue (RGB) channels. *)
 
 (** [t] is a tuple of three integers, representing the red, green, and blue channels of an
     RGB color pixel. *)
