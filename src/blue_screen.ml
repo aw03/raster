@@ -4,11 +4,18 @@ open Core
    the "blue" pixels of the foreground image with pixels from the
    corresponding position in the background image instead of just ignoring
    the background image and returning the foreground image. *)
+
+let make_blue pix img : bool =
+  Pixel.blue pix
+  > (Pixel.blue pix + Pixel.red pix + Pixel.green pix) * 40 / 100
+  && not (Pixel.blue pix < Image.max_val img / 10 * 3)
+;;
+
+(* Pixel.blue pix > Pixel.red pix + Pixel.green pix *)
+
 let transform ~(foreground : Image.t) ~(background : Image.t) : Image.t =
   Image.mapi foreground ~f:(fun ~x ~y pix ->
-    if Pixel.blue pix > Pixel.red pix + Pixel.green pix
-    then Image.get background ~x ~y
-    else pix)
+    if make_blue pix background then Image.get background ~x ~y else pix)
 ;;
 
 let%expect_test "Bluescreen Image" =
